@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IGEM Makrdown Repository</title>
+    {% load static %}
+    <link rel="icon" type="image/x-icon" href="{% static 'markdown_app/favicon.ico' %}">
+    <script src="{% static 'markdown_app/jquery.min.js' %}"></script>
+</head>
+
+<body>
+
+    <div>
+        <h1> IGEMDKU Markdown Repository</h1>
+        <p> Welcome To IGEMDKU Markdown Repository</p>
+
+    </div>
+    {% csrf_token %}
+    <div>
+        Your name : <input id="name" value="">
+        <button onclick="setNameToCookie()">change</button>
+    </div>
+    <br>
+    <div>
+        File Name : <input id="filename" value="">
+        <button onclick="addFile()">Add File</button>
+    </div>
+    <br>
+
+    <div>
+        <table cellpadding="0" cellspacing="20">
+            <tr>
+                <td>File Name</td>
+                <td></td>
+                <td>Editing User</td>
+            </tr>
+            {% for x in all %}
+            <tr>
+                <td><a href="{% url 'markdown_app:file_preview' x.id %}">{{x.title}}</a></td>
+                <td> <button onclick="changeName('{{x.id}}')">change name</button> <button
+                        onclick="deleteFile('{{x.id}}')">delete</button> </td>
+                <td id="file{{x.id}}" class="file"></td>
+            </tr>
+            {% endfor %}
+        </table>
+
+    </div>
+
+
+    <script src="{% static 'markdown_app/all.js' %}"></script>
+    <script>
+
+        const data = {
+            csrftoken: document.querySelector('[name=csrfmiddlewaretoken]').value,
+            createFileURL: "{% url 'markdown_app:api_create_file' %}",
+            newFileURLTemplate: "{% url 'markdown_app:file_preview' 0 %}",
+            userAPI: "{% url 'markdown_app:api_active_user' %}",
+            changeFileURL: "{% url 'markdown_app:api_change_file_name' %}",
+            deleteFileURL: "{% url 'markdown_app:api_delete_file' %}",
+        }
+
+
+        document.getElementById("name").value = getNameFromCookie()
+        $(function () {
+            setInterval(updateEditingUser, 3000)
+        });
+
+    </script>
+
+</body>
+
+</html>

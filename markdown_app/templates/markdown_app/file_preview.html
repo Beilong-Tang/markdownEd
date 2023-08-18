@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Simple example - Editor.md examples</title>
+    {% load static %}
+    {% include 'markdown_app/layout/load_head.html' %}
+    <link rel="stylesheet" href="{% static 'markdown_app/editormd.preview.css' %}" />
+    <link rel="icon" type="image/x-icon" href="{% static 'markdown_app/favicon.ico' %}">
+</head>
+
+<body>
+    <style>
+        #sidebar {
+            width: 20%;
+            height: 100%;
+            position: fixed;
+            top: 0;
+            right: 0;
+            overflow: hidden;
+            background: #fff;
+            z-index: 100;
+            padding: 18px;
+            border: 1px solid #ddd;
+            border-top: none;
+            border-bottom: none;
+        }
+
+        #sidebar:hover {
+            overflow: auto;
+        }
+
+        #sidebar h1 {
+            font-size: 16px;
+        }
+    </style>
+
+    {% csrf_token %}
+
+    <div>
+        <div id="else">
+            <div class="container-fluid">
+                <header>
+                    <h1 id="title">{{ title }}</h1>
+                </header>
+                <div id="sidebar">
+                    <button type="button" class="btn btn-primary" onclick="edit()">Edit</button>
+                    <button type="button" class="btn btn-primary" onclick="menu()">Menu</button>
+                    <div class="markdown-body editormd-preview-container" id="custom-toc-container"></div>
+                </div>
+
+            </div>
+        </div>
+        <div id="test-editormd">
+            <textarea style="display:none;">{{ file }}</textarea>
+        </div>
+    </div>
+    <script src="{% static 'markdown_app/jquery.min.js' %}"></script>
+    <script src="{% static 'markdown_app/lib/marked.min.js' %}"></script>
+    <script src="{% static 'markdown_app/lib/prettify.min.js' %}"></script>
+
+    <script src="{% static 'markdown_app/lib/raphael.min.js' %}"></script>
+    <script src="{% static 'markdown_app/lib/underscore.min.js' %}"></script>
+    <script src="{% static 'markdown_app/lib/sequence-diagram.min.js' %}"></script>
+    <script src="{% static 'markdown_app/lib/flowchart.min.js' %}"></script>
+    <script src="{% static 'markdown_app/lib/jquery.flowchart.min.js' %}"></script>
+    <script src="{% static 'markdown_app/file_preview.js' %}"></script>
+
+    <script src="{% static 'markdown_app/editormd.js' %}"></script>
+
+    <script type="text/javascript">
+        var testEditormdView2;
+        const data = {
+            testEditor: null,
+            submitURL: "{% url 'markdown_app:submit' %}",
+            fileID: "{{id}}",
+            FileEditURL: "{% url 'markdown_app:file' id %}",
+            FileApiURL: "{% url 'markdown_app:api_file' id '__' %}",
+            MenuURL: "{% url 'markdown_app:index' %}",
+            version: "{{version}}",
+            csrftoken: document.querySelector('[name=csrfmiddlewaretoken]').value,
+            set verSet(version) {
+                this.version = version
+            },
+            set editorSet(editormd) {
+                this.testEditor = editormd;
+            }
+        }
+
+        $(function () {
+            data.editorSet = editormd.markdownToHTML("test-editormd", {
+                htmlDecode: "style,script,iframe",  // you can filter tags decode
+                toc: true,
+                tocm: true,    // Using [TOCM]
+                tocContainer: "#custom-toc-container",
+                emoji: true,
+                taskList: true,
+                tex: true,  // 默认不解析
+                flowChart: true,  // 默认不解析
+                sequenceDiagram: true,  // 默认不解析
+            });
+
+        });
+        // add a on zoom event listener
+        window.addEventListener("resize", watchWindowSize);
+        function watchWindowSize() {
+            data.testEditor.height(window.innerHeight - $("#else").innerHeight() - 20)
+        }
+
+        getFileAndUpdate()
+        // periodically update the file with the post
+        $(function () {
+            setInterval(getFileAndUpdate, 3000)
+        });
+
+
+    </script>
+    <script src="{% static 'markdown_app/en.js' %}"></script>
+</body>
+
+</html>

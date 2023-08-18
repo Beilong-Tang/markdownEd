@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Simple example - Editor.md examples</title>
+    {% load static %}
+    {% include 'markdown_app/layout/load_head.html' %}
+    <link rel="icon" type="image/x-icon" href="{% static 'markdown_app/favicon.ico' %}">
+</head>
+
+<body>
+
+    {% csrf_token %}
+
+    <div>
+        <div id="else">
+            <div style="width: 100%; text-align: center; position: absolute;">
+                <div id="successAlert" class="alert alert-success alert-dismissible fade" role="alert"
+                    style="width: 50%; margin: 0 auto;">
+                    Your modification is saved
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+            <div class="container-fluid">
+                <header>
+                    <h1 id="title">{{ title }}</h1>
+                </header>
+
+                <button type="button" class="btn btn-primary" onclick="submit()">SAVE</button>
+                <button type="button" class="btn btn-primary" onclick="preview()">Preview</button>
+                <button type="button" class="btn btn-primary" onclick="menu()">Menu</button>
+                <strong>Editing User: </strong> <strong id="editingUser">a</strong>
+            </div>
+        </div>
+        <div id="test-editormd">
+            <textarea style="display:none;">{{ file }}</textarea>
+        </div>
+    </div>
+    {% include 'markdown_app/layout/load_foot.html' %}
+    <script src="{% static 'markdown_app/file.js' %}"></script>
+    <script type="text/javascript">
+        const data = {
+            testEditor: null,
+            submitURL: "{% url 'markdown_app:submit' %}",
+            fileID: "{{id}}",
+            FileApiURL: "{% url 'markdown_app:api_file' id 'anonymous' %}",
+            previewURL: "{% url 'markdown_app:file_preview' id  %}",
+            MenuURL: "{% url 'markdown_app:index' %}",
+            version: "{{version}}",
+            csrftoken: document.querySelector('[name=csrfmiddlewaretoken]').value,
+            set verSet(version) {
+                this.version = version
+            },
+            set editorSet(editormd) {
+                this.testEditor = editormd;
+            },
+            set FileApiSet(url) {
+                this.FileApiURL = url
+            }
+        }
+
+        // replace the anonymous with the name given in the cookie 
+        function getNameFromCookie() {
+            var cname = "name"
+            var name = cname + "=";
+            var ca = document.cookie.split(';');
+            for (var i = 0; i < ca.length; i++) {
+                var c = ca[i].trim();
+                if (c.indexOf(name) == 0) return c.substring(name.length, c.length);
+            }
+            return "annoynomous";
+        }
+
+        data.FileApiSet = data.FileApiURL.replace("anonymous", getNameFromCookie())
+
+        console.log(data.FileApiURL)
+
+
+        $(function () {
+            data.editorSet = editormd("test-editormd", {
+                width: "100%",
+                height: window.innerHeight - $("#else").innerHeight() - 20,
+                syncScrolling: "single",
+                path: "{% static 'markdown_app/lib/' %}"
+            });
+
+        });
+        // add a on zoom event listener
+        window.addEventListener("resize", watchWindowSize);
+        function watchWindowSize() {
+            data.testEditor.height(window.innerHeight - $("#else").innerHeight() - 20)
+        }
+
+        getFileAndUpdate()
+        // periodically update the file with the post
+        $(function () {
+            setInterval(getFileAndUpdate, 1000)
+        });
+
+
+    </script>
+    <script src="{% static 'markdown_app/en.js' %}"></script>
+</body>
+
+</html>
