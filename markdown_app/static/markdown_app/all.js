@@ -5,6 +5,10 @@ function addFile() {
     var filename = getCreateFileName()
 
     if (confirm("Are you sure you want to create a file called " + filename)) {
+        if (filename == "") {
+            alert("Please input File Name");
+            return
+        }
         // create a file
         $.ajax({
             method: "POST", url: data.createFileURL, headers: { 'X-CSRFToken': data.csrftoken },
@@ -69,7 +73,7 @@ function updateEditingUser() {
                     console.log(id)
                     console.log(uniqueArray[j][1] + "")
                     if (id.replace("file", "") == uniqueArray[j][1] + "") {
-                        $("#" + this.id).append(uniqueArray[j][0] + ";")
+                        $("#" + this.id).append(uniqueArray[j][0] + " ; ")
                     }
                 }
             })

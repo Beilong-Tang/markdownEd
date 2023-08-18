@@ -98,6 +98,18 @@
             setInterval(getFileAndUpdate, 1000)
         });
 
+        window.addEventListener("beforeunload", function (e) {
+
+            //TODO: check the saving mechanism
+
+            submit()
+            // var confirmationMessage = 'It looks like you have been editing something. '
+            //     + 'If you leave before saving, your changes will be lost.';
+
+            // (e || window.event).returnValue = confirmationMessage; //Gecko + IE
+            // return confirmationMessage; //Gecko + Webkit, Safari, Chrome etc.
+        });
+
 
     </script>
     <script src="{% static 'markdown_app/en.js' %}"></script>
