@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IGEM Makrdown Repository</title>
+    <title>DKU IGEM Makrdown Repository</title>
     {% load static %}
     <link rel="icon" type="image/x-icon" href="{% static 'markdown_app/favicon.ico' %}">
     <script src="{% static 'markdown_app/jquery.min.js' %}"></script>
@@ -13,9 +13,12 @@
 <body>
 
     <div>
-        <h1> IGEMDKU Markdown Repository</h1>
-        <p> Welcome To IGEMDKU Markdown Repository</p>
-        <p> Wiki Upload URL: <a href="https://uploads.igem.org/">https://uploads.igem.org/</a>.</p>
+        <h1> DKU IGEM Markdown Repository</h1>
+        <p> Welcome To DKU IGEM Markdown Repository! Please contact Beilong Tang (bt132@duke.edu) if you have questions.
+        </p>
+        <p> <strong>Static File URL:</strong> <a href="https://uploads.igem.org/">https://uploads.igem.org/</a>.</p>
+        <p> <strong>Wiki URL:</strong> <a
+                href="https://2023.igem.wiki/dku/index.html">https://2023.igem.wiki/dku/index.html</a>.</p>
 
     </div>
     {% csrf_token %}
@@ -62,7 +65,7 @@
             deleteFileURL: "{% url 'markdown_app:api_delete_file' %}",
         }
 
-
+        updateEditingUser();
         document.getElementById("name").value = getNameFromCookie()
         $(function () {
             setInterval(updateEditingUser, 3000)

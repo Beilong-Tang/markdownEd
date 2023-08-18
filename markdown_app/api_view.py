@@ -36,7 +36,7 @@ def getFile(request, fileID, userName):
     m = Markdown.objects.get(id=fileID)
 
     now = datetime.datetime.utcnow()
-    timeDue = now + datetime.timedelta(seconds=10)
+    timeDue = now + datetime.timedelta(seconds=5)
 
     if not userName == "__":
         Record.objects.create(user=userName, time=timeDue, markdownID=fileID)
