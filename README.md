@@ -18,3 +18,5 @@ To change the address and port number, change `$address` in `runserver.sh`
 - Add new markdown files
 - See current online collaborators
 - Edit multiple files at the same time
+
+This project is fully based on Django, and you can fully customize it!
